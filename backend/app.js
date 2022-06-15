@@ -9,6 +9,7 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
+
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 const options = {
@@ -24,6 +25,9 @@ const options = {
 
 const openapiSpec = swaggerJsdoc(options);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openapiSpec));
+
+var cors = require('cors');
+app.use(cors());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
