@@ -56,14 +56,23 @@ router.get('/history', function(req, res, next){
             console.log(err);
             res.json({'status':'ERROR'})
         }else{
-            console.log(result[0].carid);
-            //res.json({'status':'OK'});
-            res.render("carinfo.ejs", {
-                'carid': result[0].carid,
-                'carnumber': result[0].carnumber,
-                'title': result[0].title
-            });
+            if (result && result.length > 0){
+                console.log(result.length);
+                //res.json({'status':'OK'});
+                res.render("carinfo.ejs", {
+                    'carid': "",
+                    'carnumber': "",
+                    'title': ""
+                });
+            }else{
+                res.render("carinfo.ejs", {
+                    'carid': no_car_id,
+                    'carnumber': result[0].carnumber,
+                    'title': result[0].title
+                });
+            }
         }
     });
 });
+
 module.exports = router;
