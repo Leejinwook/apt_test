@@ -105,3 +105,6 @@ dist
 
 # mac file system
 .DS_Store
+
+#config folder
+config/
