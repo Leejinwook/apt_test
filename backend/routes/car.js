@@ -1,20 +1,15 @@
 const express = require('express');
 const router = express.Router();
-/**
-* @openapi
-* /car/info:
-*   get:
-*     description: get car information
-*     parameters:
-*       - name: name
-*         in: query
-*         required: false
-*         schema:
-*           type: string
-*     responses:
-*       200:
-*         description: Returns a mysterious string.
-*/
+const mysql = require('mysql');
+const connection = mysql.createConnection({
+    host : 'localhost',
+    user : 'carhacker',
+    password : 'qhdkswp1!@',
+    database : 'car_db'
+});
+
+connection.connect();
+
 var bodyParser = require('body-parser');
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended:true}));
@@ -33,26 +28,39 @@ router.post('/info', function(req, res, next){
     const speed = req.body.speed;
     const latitude = req.body.latitude;
     const longitude = req.body.longitude;
-    // save to db
-    //res.send("your speed is " + speed);
-    /*res.send({
-        'carid': carid,
-        'carnumber': carnumber,
-        'speed': speed,
-        'latitude': latitude,
-        'longitude': longitude
-      });*/
 
-})
+    var sql = "INSERT INTO car_info (carid, carnumber, speed, latitude, longitude) values (?,?,?,?,?)";
+    var values = [carid, carnumber, speed, latitude, longitude];
+    connection.query(sql, values, function(err, result, field){
+        if(err){
+            console.log(err);
+            res.json({'status':'ERROR'})
+        }else{
+            console.log(result);
+            res.json({'status':'OK'});
+        }
+    });
+});
 
-router.get('/show', function(req, res, next){
-    const title = "Your Car Info"
-    const carnumber = "12가3456"
-    const carid = "09e7b07a-eeb6-11ec-acf2-acde48001122";
-    res.render("carinfo.ejs", {
-        'carid': carid,
-         'carnumber':carnumber,
-          'title': title
-        })
-})
+router.get('/history', function(req, res, next){
+    const carid = req.query.carid
+    //const carid = "09e7b07a-eeb6-11ec-acf2-acde48001122";
+    //select
+    var sql = "SELECT carid, carnumber, speed, latitude, longitude FROM car_info WHERE carid =?";
+    var values = [carid];
+    connection.query(sql, values, function(err, result, field){
+        if(err){
+            console.log(err);
+            res.json({'status':'ERROR'})
+        }else{
+            console.log(result[0].carid);
+            //res.json({'status':'OK'});
+            res.render("carinfo.ejs", {
+                'carid': result[0].carid,
+                'carnumber': result[0].carnumber,
+                'title': result[0].title
+            });
+        }
+    });
+});
 module.exports = router;
