@@ -60,15 +60,15 @@ router.get('/history', function(req, res, next){
                 console.log(result.length);
                 //res.json({'status':'OK'});
                 res.render("carinfo.ejs", {
-                    'carid': "",
-                    'carnumber': "",
-                    'title': ""
-                });
-            }else{
-                res.render("carinfo.ejs", {
                     'carid': result[0].carid,
                     'carnumber': result[0].carnumber,
                     'title': result[0].title
+                });
+            }else{
+                res.render("carinfo.ejs", {
+                    'carid': "",
+                    'carnumber': "",
+                    'title': ""
                 });
             }
         }
