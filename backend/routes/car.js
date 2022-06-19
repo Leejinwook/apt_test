@@ -66,9 +66,9 @@ router.get('/history', function(req, res, next){
                 });
             }else{
                 res.render("carinfo.ejs", {
-                    'carid': no_car_id,
-                    'carnumber': result[0].carnumber,
-                    'title': result[0].title
+                    'carid': "",
+                    'carnumber': "",
+                    'title': ""
                 });
             }
         }
