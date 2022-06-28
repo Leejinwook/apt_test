@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
+var bodyParser = require('body-parser');
+
 require('dotenv').config();
 
 const connection = mysql.createConnection({
@@ -10,10 +12,8 @@ const connection = mysql.createConnection({
     port : process.env.DB_PORT,
     database : process.env.DB_NAME
 });
-
 connection.connect();
 
-var bodyParser = require('body-parser');
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended:true}));
 
@@ -78,6 +78,7 @@ router.post('/enginStatusReq', function(req, res, next){
     console.log(req.body);
     const engin = ["STOP", "START", "STOP_REQ", "START_REQ"]
     const carid = req.body.carid;
+    const type = req.body.type; //car or app
     const engin_status = req.body.engin_status.toUpperCase();
     var req_ok = false;
     // 요청 정합성 확인
@@ -100,26 +101,49 @@ router.post('/enginStatusReq', function(req, res, next){
                     cur_engin_status = "";
                 }
             }
-
-            if(cur_engin_status == "" || cur_engin_status.replace('_REQ', '') != engin_status.replace('_REQ', '')){
-                if(engin.includes(engin_status)){
-                    var sql = "INSERT INTO car_engin (carid, engin_status) values (?,?)";
-                    var values = [carid, engin_status];
-                    connection.query(sql, values, function(err, result, field){
-                        if(err){
-                            console.log(err);
-                            res.json({'status':'DB ERROR'});
-                        }else{
-                            console.log(result);
-                            res.json({'status': engin_status});
-                        }
-                    });
-                    // To-Do : 자동차(라즈베리파이)로 엔진시작 요청 구현
+            console.log("cur_engin_status : " + cur_engin_status)
+            console.log("engin_status : " + engin_status)
+            console.log("type :" + type)
+            if(type == 'CAR'){
+                if(cur_engin_status == "" || cur_engin_status.replace('_REQ', '') == engin_status.replace('_REQ', '')){
+                    if(engin.includes(engin_status)){
+                        var sql = "INSERT INTO car_engin (carid, engin_status) values (?,?)";
+                        var values = [carid, engin_status];
+                        connection.query(sql, values, function(err, result, field){
+                            if(err){
+                                console.log(err);
+                                res.json({'status':'DB ERROR'});
+                            }else{
+                                console.log(result);
+                                res.json({'status': engin_status});
+                            }
+                        });
+                    }else{
+                        res.json({'status':'DB ERROR'})
+                    }
                 }else{
-                    res.json({'status':'DB ERROR'})
+                    res.json({'status':'REQUEST STATUS ERROR(SAME)'})
                 }
-            }else{
-                res.json({'status':'REQUEST STATUS ERROR(SAME)'})
+            }else if(type == "APP"){
+                if(cur_engin_status == "" || cur_engin_status.replace('_REQ', '') != engin_status.replace('_REQ', '')){
+                    if(engin.includes(engin_status)){
+                        var sql = "INSERT INTO car_engin (carid, engin_status) values (?,?)";
+                        var values = [carid, engin_status];
+                        connection.query(sql, values, function(err, result, field){
+                            if(err){
+                                console.log(err);
+                                res.json({'status':'DB ERROR'});
+                            }else{
+                                console.log(result);
+                                res.json({'status': engin_status});
+                            }
+                        });
+                    }else{
+                        res.json({'status':'DB ERROR'})
+                    }
+                }else{
+                    res.json({'status':'REQUEST STATUS ERROR(SAME)'})
+                }
             }
         });
     }
@@ -142,10 +166,10 @@ router.post('/enginStatus', function(req, res, next){
             if (result && result.length > 0){
                 res.json({'status': result[0].engin_status});
             }else{
-                res.json({'status':'Engin Stop'});
+                res.json({'status':'NO_DATA'});
             }
         }
     });
 });
-
+ 
 module.exports = router;

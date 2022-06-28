@@ -4,12 +4,13 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
-
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var cors = require('cors');
+var passport = require('passport');
+var localStrategy = require('passport-local').Strategy;
+var session = require('express-session');
+var flash = require('connect-flash')
 
 var app = express();
-
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
@@ -27,7 +28,6 @@ const options = {
 const openapiSpec = swaggerJsdoc(options);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openapiSpec));
 
-var cors = require('cors');
 app.use(cors());
 
 // view engine setup
@@ -42,10 +42,23 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+// login session
+app.use(session({
+  secret: 'lgcnsredteam',
+  resave: false,
+  saveUninitialized: true
+}))
+
+//passport
+app.use(passport.initialize())
+app.use(passport.session())
+
+app.use(flash())
+
+app.use('/', require('./routes/index'));
+app.use('/user', require('./routes/user/user'));
 app.use('/api', require('./routes/api'));
-app.use('/car', require('./routes/car'));
+app.use('/car', require('./routes/car/car'));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

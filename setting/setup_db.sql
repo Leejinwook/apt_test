@@ -24,7 +24,17 @@ create table if not exists car_engin(
     primary key(id)
 );
 
+create table if not exists user(
+    id int not null AUTO_INCREMENT,
+    email varchar(50) NOT NULL,
+    password varchar(20) NOT NULL,
+    carid varchar(50),
+    time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    primary key(id)
+);
+
 create table if not exists car_info(id int not null AUTO_INCREMENT, carid varchar(50) NOT NULL, carnumber varchar(50) NOT NULL,speed int,latitude varchar(50),longitude varchar(50),time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,primary key(id));
 create table if not exists car_engin(id int not null AUTO_INCREMENT, carid varchar(50) NOT NULL, engin_status varchar(20) NOT NULL DEFAULT "STOP", time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP, primary key(id));
+create table if not exists user(id int not null AUTO_INCREMENT, email varchar(50) NOT NULL, password varchar(20) NOT NULL, carid varchar(50), time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP, primary key(id));
 
 select engin_status from car_engin where carid = "09e7b07a-eeb6-11ec-acf2-acde48001122" and engin_status = "START_REQ" order by id desc limit 1;

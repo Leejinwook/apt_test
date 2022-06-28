@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Car Information System::login</title>
+  </head>
+  <body>
+    <h1>login page</h1>
+    <section class="message"><%= message %></section>
+    <form action="/user/login" method="post">
+      email : <input type="text" name="email" id="email"><br>
+      password : <input type="text" name="password" id="password"><br>
+      <button type="submit">login</button><button type="reset">reset</button>
+    </form>
+  </body>
+</html>
