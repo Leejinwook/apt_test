@@ -27,13 +27,14 @@ router.get('/update', function (req, res, next) {
 router.post('/update', function(req, res, next){
     console.log(req.body);
     const carid = req.body.carid;
-    const carnumber = req.body.carnumber;
+    // const carnumber = req.body.carnumber;
     const speed = req.body.speed;
     const latitude = req.body.latitude;
     const longitude = req.body.longitude;
+    const door = req.body.door;
 
-    const sql = 'INSERT INTO car_info (carid, carnumber, speed, latitude, longitude) values (?,?,?,?,?)';
-    const values = [carid, carnumber, speed, latitude, longitude];
+    const sql = 'INSERT INTO car_info (carid, carnumber, speed, door, latitude, longitude) values (?,(select carnumber from user where carid = ?),?,?,?,?)';
+    const values = [carid, carid, speed, door, latitude, longitude];
     connection.query(sql, values, function(err, result, field){
         if(err){
             console.log(err);
@@ -46,9 +47,8 @@ router.post('/update', function(req, res, next){
 });
 
 router.get('/history', function(req, res, next){
+    console.log(req.query);
     const carid = req.query.carid
-    //const carid = '09e7b07a-eeb6-11ec-acf2-acde48001122';
-    //select
     var sql = 'SELECT carid, carnumber, speed, latitude, longitude FROM car_info WHERE carid =?';
     var values = [carid];
     connection.query(sql, values, function(err, result, field){
@@ -166,7 +166,7 @@ router.post('/enginStatus', function(req, res, next){
             if (result && result.length > 0){
                 res.json({'status': result[0].engin_status});
             }else{
-                res.json({'status':'NO_DATA'});
+                res.json({'status':'STOP'});
             }
         }
     });
@@ -207,7 +207,7 @@ router.post('/info', function(req, res, next){
  
 // 엔진 현재상태 조회
 router.post('/engin', function(req, res, next){
-    // console.log(req.body);
+    console.log(req.body);
     const token = req.body.token;
     // jwt verify
     try{
@@ -245,6 +245,7 @@ router.post('/engin', function(req, res, next){
 
 // 차량정보 상태 조회
 router.post('/history', function(req, res, next){
+    console.log(req.body);
     const token = req.body.token;
     let email = '';
     try{
@@ -278,7 +279,6 @@ router.post('/changeEngin', function(req, res, next){
     const engin = ['STOP', 'START', 'STOP_REQ', 'START_REQ'];
     const engin_status = req.body.reqStatus.toUpperCase();
     const isValid = engin.includes(engin_status)? true: false;
-    console.log("111")
     if (!isValid) res.json({'status': false,'message':'Invalide Engin Status Requested.'});
     else {
         const token = req.body.token;
@@ -295,8 +295,9 @@ router.post('/changeEngin', function(req, res, next){
                     }else{
                         if (result && result.length > 0){
                             const status = result[0].engin_status;
-                            if(status == req.body.reqStatus) res.json({'status': false,'message':'Same Status'});
-                            else{
+                            if (status == req.body.reqStatus){
+                                res.json({'status': false,'message':'Same Status'});
+                            } else{
                                 const sql = 'INSERT INTO car_engin (carid, engin_status) values (?,?)';
                                 const values = [result[0].carid, req.body.reqStatus];
                                 connection.query(sql, values, function(err, result, field){
@@ -313,7 +314,21 @@ router.post('/changeEngin', function(req, res, next){
                                 });
                             }
                         }else{
-                            res.json({'status':false, 'message': 'The car info is not exist.'});
+                            // Initial create car_engin info
+                            const sql = 'INSERT INTO car_engin (carid, engin_status) values ((SELECT carid FROM user WHERE email = ?),?)';
+                            const values = [payload.email, "STOP"];
+                            connection.query(sql, values, function(err, result, field){
+                                if(err){
+                                    console.log(err);
+                                    res.json({'status': false, 'message':'DB ERROR'});
+                                }else{
+                                    console.log(result);
+                                    res.json({
+                                        'status': true,
+                                        'message':'ok'
+                                    });
+                                }
+                            });
                         }
                     }
                 });
