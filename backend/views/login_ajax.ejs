@@ -34,7 +34,7 @@
                 const resultDiv = document.querySelector('.result');
 
                 //if(result.email) resultDiv.innerHTML = "Welcome, " + result.email + "!!";
-                if(result.email) window.location.href='/';
+                if(result.token) window.location.href='/';
                 else resultDiv.innerHTML = result;
             });
         }
