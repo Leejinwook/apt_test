@@ -42,7 +42,7 @@ router.post('/hi', function (req, res, next) {
 
 
 router.get('/get_jwt_token_with_hs256', function(req, res, next){
-  secret = "magic"
+  secret = "magic" 
   option = {
       algorithm : "HS256",
       expiresIn : "3h",
@@ -51,7 +51,7 @@ router.get('/get_jwt_token_with_hs256', function(req, res, next){
   const token = jwt.sign(
     {role: "student", message1: "find my secret!", message2: "and change role to admin"}, secret, optons
   )
-  return res.json({ token });
+  return res.json({ jwt: token });
 })
 
 router.get('/get_jwt_token_with_rs256', function(req, res, next){
@@ -106,6 +106,21 @@ router.get('/get_jwt_token_with_rs256', function(req, res, next){
   + "kpkWcd+LJBVVXCUKdT7krCcrpU9cntoslnqKINkGZLyH7PuHQ1xmi9udxHL+guAQ\n"
   + "3dddA+UoVQt2lAxefvRZ/0ZYm4rgRw0KlmyHu8ufHsjiG2fhYy1n4havMugd\n"
   + "-----END RSA PRIVATE KEY-----"
+
+  pub_key = "-----BEGIN PUBLIC KEY-----\n" +
+  "MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAsH4OIkr/DeCHEiimF3Av\n" +
+  "Q7flNFb9i5lv2u0byGZ061rR0G5F9DOT8bpS/Ubcci2h9eGiTrjf7WukGhhcTYDW\n" +
+  "mELGnVyFANjxy2j7sBGKp7YVCAy5wx+BwB16ir5hLPHc6+W3H/IPoUWDQ9jHT9RZ\n" +
+  "JJagoIRgo3i/hQU/p4PFIuNfqPtONjSc9Xffl/cjHsnclMIrcnnlaR1UGROdfg2Z\n" +
+  "QO+7OST292iTmYvVHy2PRghaYo32F1CTd0bmp41/KLv9i0SkD6L8npPZDr3Dt/ee\n" +
+  "mApuMiT47oSgMSG4bFJaM8XY8idoBtbvVO/ZV3zMBfNz25lm6PcR7lYUvMlGktBo\n" +
+  "dNOWgj6JfEwvZgBl7gBbPZ1piJb9bKIaB6PjeZn8l+2fuZCdOcSpgoAaUs62ocSw\n" +
+  "mQZUV6MzthR6U7U979RAag84NYPe6fqfcqk9iW5qHr1a/E0s/FMNHSTVHGAYrTXm\n" +
+  "olgdqArVpcx1WR2SKi5I839+BamzsnoJItKqbY00h8li74yUCPJPzk5ysmHRRUTG\n" +
+  "5yL/LCF85WIhokv15tT04+U4KOboQ+xHVJgIbWgAf9PG8XfjtsdST8iyB38gvNj4\n" +
+  "OlJqJ8/U3+lDOKXh5U2/e9dsmMlMIGWj5hqq+SzOavklWNtUZGaH9N2Av/TI5XfM\n" +
+  "zFm5LYCUSSnR/d+L2sJHGT0CAwEAAQ==" + 
+  "-----END PUBLIC KEY-----"
   
   option = {
       algorithm : "RS256",
@@ -115,7 +130,7 @@ router.get('/get_jwt_token_with_rs256', function(req, res, next){
   const token = jwt.sign(
     {role: "student2", message: "find my secret!", message2: "and change role to admin2"}, secret, optons
   )
-  return res.json({ token });
+  return res.json({ jwt :token, pub_key: pub_key });
 })
 
 module.exports = router;
