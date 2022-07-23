@@ -41,7 +41,7 @@ router.post('/hi', function (req, res, next) {
 })
 
 
-router.post('/get_jwt_token_whith_hs256', function(req, res, next){
+router.get('/get_jwt_token_with_hs256', function(req, res, next){
   secret = "magic"
   option = {
       algorithm : "HS256",
@@ -54,7 +54,7 @@ router.post('/get_jwt_token_whith_hs256', function(req, res, next){
   return res.json({ token });
 })
 
-router.post('/get_jwt_token_whith_rs256', function(req, res, next){
+router.get('/get_jwt_token_with_rs256', function(req, res, next){
   secret = "-----BEGIN RSA PRIVATE KEY----\n"
   + "MIIJKQIBAAKCAgEAsH4OIkr/DeCHEiimF3AvQ7flNFb9i5lv2u0byGZ061rR0G5F\n"
   + "9DOT8bpS/Ubcci2h9eGiTrjf7WukGhhcTYDWmELGnVyFANjxy2j7sBGKp7YVCAy5\n"
@@ -113,7 +113,7 @@ router.post('/get_jwt_token_whith_rs256', function(req, res, next){
       issuer : "LG CNS"
   }
   const token = jwt.sign(
-    {role: "student", message1: "find my secret!", message2: "and change role to admin"}, secret, optons
+    {role: "student2", message: "find my secret!", message2: "and change role to admin2"}, secret, optons
   )
   return res.json({ token });
 })
