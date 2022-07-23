@@ -55,7 +55,7 @@ router.get('/get_jwt_token_with_hs256', function(req, res, next){
 })
 
 router.get('/get_jwt_token_with_rs256', function(req, res, next){
-  secret = "-----BEGIN RSA PRIVATE KEY----\n"
+  secret = "-----BEGIN RSA PRIVATE KEY-----\n"
   + "MIIJKQIBAAKCAgEAsH4OIkr/DeCHEiimF3AvQ7flNFb9i5lv2u0byGZ061rR0G5F\n"
   + "9DOT8bpS/Ubcci2h9eGiTrjf7WukGhhcTYDWmELGnVyFANjxy2j7sBGKp7YVCAy5\n"
   + "wx+BwB16ir5hLPHc6+W3H/IPoUWDQ9jHT9RZJJagoIRgo3i/hQU/p4PFIuNfqPtO\n"
