@@ -108,3 +108,5 @@ dist
 
 #config folder
 config/
+setting/jwtRS256.key
+setting/jwtRS256.key.pub
