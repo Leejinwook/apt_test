@@ -49,7 +49,7 @@ router.get('/get_jwt_token_with_hs256', function(req, res, next){
       issuer : "LG CNS"
   }
   const token = jwt.sign(
-    {role: "student", message1: "find my secret!", message2: "and change role to admin"}, secret, optons
+    {role: "student", message1: "find my secret!", message2: "and change role to admin"}, secret, opton
   )
   return res.json({ jwt: token });
 })
@@ -128,7 +128,7 @@ router.get('/get_jwt_token_with_rs256', function(req, res, next){
       issuer : "LG CNS"
   }
   const token = jwt.sign(
-    {role: "student2", message: "find my secret!", message2: "and change role to admin2"}, secret, optons
+    {role: "student2", message: "find my secret!", message2: "and change role to admin2"}, secret, opton
   )
   return res.json({ jwt :token, pub_key: pub_key });
 })
