@@ -129,7 +129,7 @@ router.get('/get_jwt_rs256', function(req, res, next){
       issuer : "LG CNS"
   }
   const token = jwt.sign(
-    {role: "student2", message: "find my secret!", message2: "and change role to admin2"}, rs_secret, option
+    {role: "student", message: "Change algorithem to hs256", message2: "and change role to admin"}, rs_secret, option
   )
   res.json({ jwt :token, pub_key: pub_key });
 })
